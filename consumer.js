@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=Irc3y08fFKg
-var amqp = require('amqplib');
+var amqp = require("amqplib");
 // Conectando com o rabbitmq
 amqp
   .connect("amqp://localhost")
@@ -12,10 +12,13 @@ amqp
     console.log("Canal criado!");
     //http://localhost:15672/#/channels
 
-    setInterval(function () {
-    console.log("Enviando mensagem...");
+      ch.prefetch(1);
+      ch.consume("mensagens", function (msg) {
+          setTimeout(function () {
+          console.log("%s Mensagem recebida: %s", new Date(), msg.content.toString());
 
-    ch.sendToQueue('mensagens', Buffer('Hello world'));
-    //http://localhost:15672/#/queues/%2F/mensagens
-    }, 1000);
+          //Esta tudo ok
+          ch.ack(msg);
+          },2000);
+    });
   });
