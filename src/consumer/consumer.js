@@ -2,7 +2,7 @@
 var amqp = require("amqplib");
 // Conectando com o rabbitmq
 const level = require('level-party')
-var db = level('../../db', { valueEncoding: 'json' })
+var db = level('./db')
 // banco leveldb com multiplos niveis utilizando Round-Robin para escalonar as tarefas
 var uuid = require("uuid");
 
@@ -24,7 +24,7 @@ amqp
             console.log("Erro ao salvar mensagem: ", err.stack);
             return ch.nack(msg);
           }
-          console.log("Mensagem salva!");
+          console.log("Mensagem salva!: ", msg.content.toString());
           ch.ack(msg);
         });
 

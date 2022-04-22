@@ -2,7 +2,7 @@
 var amqp = require("amqplib");
 // Conectando com o rabbitmq
 const level = require("level-party");
-var db = level("../../db", { valueEncoding: "json" });
+var db = level("./consumer/db");
 // banco leveldb com multiplos niveis utilizando Round-Robin para escalonar as tarefas
 var helpers = require("../utils/helpers/helpers");
 
@@ -20,11 +20,11 @@ amqp
       console.log("Requisição recebida %s", msg.properties.replyTo);
       var dados = [];
         db.createValueStream().on("data", function (data) {
-            console.log(data);
+          console.log("data:", data);
             dados.push(data);
         }).on("end", function () {
-          console.log("Terminou de buscar!");
-          ch.sendToQueue(msg.replyTo, helpers.JSONtoBuffer(dados));
+          console.log(dados);
+          ch.sendToQueue(msg.properties.replyTo, helpers.JSONtoBuffer(dados));
           ch.ack(msg);
         });
     });

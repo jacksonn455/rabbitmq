@@ -24,8 +24,6 @@ amqp
         message: message,
       });
 
-      ch.sendToQueue("mensagens", buff, {
-        contentType:"application/json"
-      });
+      ch.sendToQueue("mensagens", buff);
     });
   });

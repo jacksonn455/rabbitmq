@@ -3,11 +3,14 @@ var amqp = require("amqplib");
 // Conectando com o rabbitmq
 var http = require("http");
 
-amqp.connect("amqp://localhost").then(function (conn) {
-  http
-    .Server(function (req, res) {
+amqp.connect("amqp://localhost")
+.then(function (conn) {
+  http.Server(function (req, res) {
+
       var channel = null;
-      conn.createChannel().then(function (ch) {
+
+      conn.createChannel()
+      .then(function (ch) {
           channel = ch;
           return ch.assertQueue("", {
             exclusive: true,
@@ -18,7 +21,7 @@ amqp.connect("amqp://localhost").then(function (conn) {
         //Esperando resposta do cliente
 
           channel.consume(q.queue, function (msg) {
-            res.writeHead(200, {
+            res.writeHead('200', {
                 "Content-Type": "application/json"
         });
 
